@@ -1,0 +1,25 @@
+name: 🚀 Deploy Changes to FairSourcing
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{secrets.PORT}}
+          script: |
+                  cd ~/domains/fairsourcing.net/public_html
+                  eval $(ssh-agent -s)
+                  ssh-add ~/.ssh/id_ed25519
+                  git reset --hard
+                  git pull origin main
